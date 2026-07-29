@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-07-29T17:18:16+02:00",
+  "source_url": "https://www.edu.xunta.gal/ciclosadmision/publico/HistorialAlumno.do?DIALOG-EVENT-listaxeModulosLiberados=listaxeModulosLiberados&ano=2026&grao=M&tipo=D",
+  "pdf_sha256": "cf9e99333c48b61c6223cc06ff1f571e1f4a99aeaa03235f42058c5f2d996b88",
+  "center": {
+    "code": "15021469",
+    "name": "CIFP Leixa"
+  },
+  "cycle": {
+    "code": "ZD2SAN000",
+    "name": "Farmacia e parafarmacia"
+  },
+  "modules": [
+    {
+      "code": "MO0001",
+      "name": "- Habilidades comunicativas en lingua estranxeira",
+      "offered": 50,
+      "occupied": 50,
+      "vacant": 0
+    },
+    {
+      "code": "MO0003",
+      "name": "- Afondamento nas competencias profesionais (GM)",
+      "offered": 50,
+      "occupied": 47,
+      "vacant": 3
+    },
+    {
+      "code": "MP1664",
+      "name": "- Dixitalización aplicada ao sistema produtivo",
+      "offered": 50,
+      "occupied": 47,
+      "vacant": 3
+    },
+    {
+      "code": "MP1708",
+      "name": "- Sostibilidade aplicada ao sistema produtivo",
+      "offered": 50,
+      "occupied": 50,
+      "vacant": 0
+    },
+    {
+      "code": "MP1710",
+      "name": "- Itinerario persoal para a empregabilidade II",
+      "offered": 50,
+      "occupied": 38,
+      "vacant": 12
+    }
+  ]
+}
