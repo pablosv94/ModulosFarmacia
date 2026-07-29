@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-07-29T23:31:13+02:00",
+  "checked_at": "2026-07-29T23:41:02+02:00",
   "source_url": "https://www.edu.xunta.gal/ciclosadmision/publico/HistorialAlumno.do?DIALOG-EVENT-listaxeModulosLiberados=listaxeModulosLiberados&ano=2026&grao=M&tipo=D",
-  "pdf_sha256": "b07aadb85425f3d5b52e9ec69893fcb6cb28e7cc06cefcc836d70ac8fabfe010",
+  "pdf_sha256": "a9ec1defab96a6142d1023f9345fad32c8ed56e3f6cf45ce9689c558b3236e50",
   "center": {
     "code": "15021469",
     "name": "CIFP Leixa"
@@ -18,34 +18,6 @@
       "offered": 50,
       "occupied": 50,
       "vacant": 0
-    },
-    {
-      "code": "MO0003",
-      "name": "- Afondamento nas competencias profesionais (GM)",
-      "offered": 50,
-      "occupied": 47,
-      "vacant": 3
-    },
-    {
-      "code": "MP1664",
-      "name": "- Dixitalización aplicada ao sistema produtivo",
-      "offered": 50,
-      "occupied": 47,
-      "vacant": 3
-    },
-    {
-      "code": "MP1708",
-      "name": "- Sostibilidade aplicada ao sistema produtivo",
-      "offered": 50,
-      "occupied": 50,
-      "vacant": 0
-    },
-    {
-      "code": "MP1710",
-      "name": "- Itinerario persoal para a empregabilidade II",
-      "offered": 50,
-      "occupied": 38,
-      "vacant": 12
     }
   ]
 }
