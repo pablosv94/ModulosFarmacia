@@ -1,8 +1,12 @@
 name: Monitor CIFP Leixa
 
 on:
-  schedule:
-    - cron: "3,13,23,33,43,53 * * * *"
+  workflow_call:
+    inputs:
+      send_test_notification:
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       send_test_notification:

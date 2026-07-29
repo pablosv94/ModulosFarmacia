@@ -1,0 +1,17 @@
+name: Monitor CIFP Leixa programado
+
+on:
+  schedule:
+    - cron: "3,13,23,33,43,53 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor-cifp-leixa
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    uses: ./.github/workflows/monitor-leixa.yml
+    secrets: inherit
