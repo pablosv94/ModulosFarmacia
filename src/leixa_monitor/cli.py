@@ -31,8 +31,8 @@ EXIT_ERROR = 1
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Vigila las plazas de Farmacia del CIFP Leixa")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
-    parser.add_argument("--attempts", type=int, default=4)
-    parser.add_argument("--retry-wait", type=float, default=20)
+    parser.add_argument("--attempts", type=int, default=5)
+    parser.add_argument("--retry-wait", type=float, default=3)
     parser.add_argument("-v", "--verbose", action="store_true")
     sub = parser.add_subparsers(dest="command", required=True)
     check = sub.add_parser("check", help="descarga, compara y actualiza el estado")

@@ -29,6 +29,20 @@ def test_updating_retries() -> None:
 
 
 @responses.activate
+def test_updating_uses_five_attempts_three_seconds_apart_by_default() -> None:
+    body = (FIXTURES / "updating.html").read_bytes()
+    for _ in range(5):
+        responses.get(SOURCE_URL, body=body, content_type="text/html")
+    delays: list[float] = []
+
+    with pytest.raises(ReportUpdating):
+        download_pdf(SOURCE_URL, sleep=delays.append)
+
+    assert len(responses.calls) == 5
+    assert delays == [3, 3, 3, 3]
+
+
+@responses.activate
 def test_unexpected_html() -> None:
     responses.get(
         SOURCE_URL,

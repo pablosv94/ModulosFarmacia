@@ -50,9 +50,14 @@ def extract_text(pdf: bytes) -> str:
 def parse_report_text(
     text: str,
     center_code: str = "15021469",
+    center_name: str = "CIFP Leixa",
     cycle_code: str = "ZD2SAN000",
 ) -> ExtractedReport:
     lines = [" ".join(line.split()) for line in text.splitlines()]
+    has_center_code = any(
+        (match := CENTER_RE.match(line)) is not None and match.group(1) == center_code
+        for line in lines
+    )
     center: Entity | None = None
     cycle: Entity | None = None
     in_center = False
@@ -83,6 +88,11 @@ def parse_report_text(
                 break
             else:
                 in_center = False
+            continue
+        if not has_center_code and center_name.casefold() in line.casefold():
+            center = Entity(center_code, center_name)
+            in_center = True
+            in_cycle = False
             continue
         if not in_center:
             continue

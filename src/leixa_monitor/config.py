@@ -15,8 +15,8 @@ EXPECTED_HOST = "www.edu.xunta.gal"
 @dataclass(frozen=True, slots=True)
 class Settings:
     data_dir: Path
-    attempts: int = 4
-    retry_wait: float = 20.0
+    attempts: int = 5
+    retry_wait: float = 3.0
     connect_timeout: float = 10.0
     read_timeout: float = 45.0
     max_pdf_bytes: int = 50 * 1024 * 1024

@@ -37,7 +37,7 @@ python -m leixa_monitor.cli check --dry-run
 python -m leixa_monitor.cli check --force-notify
 python -m leixa_monitor.cli send-test-notification
 python -m leixa_monitor.cli print-current
-python -m leixa_monitor.cli --data-dir otra-carpeta --attempts 4 --retry-wait 20 check
+python -m leixa_monitor.cli --data-dir otra-carpeta --attempts 5 --retry-wait 3 check
 python -m leixa_monitor.cli -v check
 ```
 
@@ -124,7 +124,7 @@ endpoint real; puede saltarse si el informe se está regenerando.
 ## Diagnóstico
 
 - **El informe se está actualizando:** es una respuesta normal de la Xunta. El monitor hace
-  cuatro intentos separados por 20 segundos. Finaliza con código 2 y conserva el estado.
+  cinco intentos separados por 3 segundos. Finaliza con código 2 y conserva el estado.
 - **No se encuentra el centro:** verifica que el curso sigue siendo 2026-2027 y revisa el texto
   extraído del PDF; tras tres ejecuciones fallidas se enviará la alerta persistente.
 - **No se encuentra el ciclo:** la Xunta puede haber cambiado el código, el rótulo o el diseño.
@@ -150,4 +150,3 @@ cambios estructurados; `state.py` escribe JSON atómicamente; `notifier.py` gene
 y usa la API oficial de Telegram; `cli.py` coordina el proceso y la salud persistente.
 
 No se usa OCR, navegador automatizado ni servicios de pago. El PDF no se guarda ni versiona.
-

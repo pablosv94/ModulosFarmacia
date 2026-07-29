@@ -20,6 +20,16 @@ def test_center_missing() -> None:
         parse_report_text("15000001 - Outro centro")
 
 
+def test_finds_center_by_name_when_code_is_missing() -> None:
+    report = parse_report_text(
+        (FIXTURES / "report_center_without_code.txt").read_text(encoding="utf-8")
+    )
+
+    assert report.center.code == "15021469"
+    assert report.center.name == "CIFP Leixa"
+    assert [item.code for item in report.modules] == ["MP0100", "MP0101"]
+
+
 def test_inconsistent_total() -> None:
     text = "15021469 - CIFP Leixa\nZD2SAN000 - Farmacia e parafarmacia\nMP0100 Nome 10 8 3"
     with pytest.raises(ExtractionError, match="totales"):

@@ -1,0 +1,8 @@
+Curso: 2026-2027
+Grao: Medio
+Modalidade: Distancia
+CIFP Leixa
+ZD2SAN000 - Farmacia e parafarmacia
+Código Módulo Ofertadas Ocupadas Vacantes
+MP0100 Oficina de farmacia 40 37 3
+MP0101 Dispensación de produtos farmacéuticos 30 28 2
