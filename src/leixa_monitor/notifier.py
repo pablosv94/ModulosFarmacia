@@ -31,6 +31,81 @@ def build_report_updating_message() -> str:
     )
 
 
+def _module_summary(module: ModuleAvailability) -> str:
+    return (
+        f"{html.escape(module.code)} · {html.escape(module.name)} — "
+        f"{module.offered} ofertadas, {module.occupied} ocupadas, {module.vacant} vacantes"
+    )
+
+
+def build_status_message(state: MonitorState, changes: Iterable[Change]) -> str:
+    changes_by_module: dict[str, list[Change]] = defaultdict(list)
+    removed: list[ModuleAvailability] = []
+    for change in changes:
+        if change.kind == ChangeType.MODULE_REMOVED:
+            assert isinstance(change.old, ModuleAvailability)
+            removed.append(change.old)
+        elif change.module_code is not None:
+            changes_by_module[change.module_code].append(change)
+
+    has_changes = bool(changes_by_module or removed)
+    lines = [
+        "✅ <b>Comprobación completada en el CIFP Leixa</b>",
+        "",
+        f"<b>{html.escape(state.cycle.code)} · {html.escape(state.cycle.name)}</b>",
+        "Se detectaron cambios:"
+        if has_changes
+        else "Sin cambios respecto a la comprobación anterior.",
+        "",
+        "<b>Asignaturas</b>",
+    ]
+    for module in state.modules:
+        module_changes = changes_by_module.get(module.code, [])
+        summary = _module_summary(module)
+        added = any(change.kind == ChangeType.MODULE_ADDED for change in module_changes)
+        if added:
+            lines.append(f"• <b>{summary} — NUEVA</b>")
+            continue
+        relevant = [
+            change
+            for change in module_changes
+            if change.kind
+            in {
+                ChangeType.NAME_CHANGED,
+                ChangeType.OFFERED_CHANGED,
+                ChangeType.OCCUPIED_CHANGED,
+                ChangeType.VACANT_CHANGED,
+            }
+        ]
+        if not relevant:
+            lines.append(f"• {summary}")
+            continue
+        lines.append(f"• <b>{summary}</b>")
+        details: list[str] = []
+        for change in relevant:
+            label = LABELS[change.kind]
+            suffix = ""
+            if change.kind == ChangeType.VACANT_CHANGED:
+                delta = int(change.new) - int(change.old)  # type: ignore[arg-type]
+                suffix = f" ({delta:+d})"
+            details.append(
+                f"{label}: {html.escape(str(change.old))} → {html.escape(str(change.new))}{suffix}"
+            )
+        lines.append(f"  <b>Cambios: {'; '.join(details)}</b>")
+    for module in removed:
+        lines.append(f"• <s>{_module_summary(module)} — ELIMINADA</s>")
+
+    checked = datetime.fromisoformat(state.checked_at)
+    lines.extend(
+        [
+            "",
+            f"Comprobado: {checked.astimezone().strftime('%d/%m/%Y %H:%M')}",
+            f'<a href="{html.escape(state.source_url, quote=True)}">Abrir informe oficial</a>',
+        ]
+    )
+    return "\n".join(lines)
+
+
 def build_change_message(state: MonitorState, changes: Iterable[Change]) -> str:
     grouped: dict[str | None, list[Change]] = defaultdict(list)
     for change in changes:

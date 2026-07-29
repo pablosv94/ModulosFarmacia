@@ -3,8 +3,9 @@
 Proyecto autónomo en Python 3.12 que consulta directamente el informe público de módulos
 liberados de FP de la Xunta de Galicia. Solo extrae el centro `15021469 - CIFP Leixa`, el ciclo
 `ZD2SAN000 - Farmacia e parafarmacia`, curso 2026-2027, grado medio y modalidad a distancia.
-Compara cada PDF válido con el último estado y avisa por Telegram únicamente si cambian los
-módulos o sus plazas.
+Compara cada PDF válido con el último estado y envía por Telegram un resumen de cada
+comprobación correcta. El mensaje lista todos los módulos, resalta en negrita los nuevos o
+modificados y muestra tachados los que desaparecieron del informe.
 
 El descargador identifica por separado un PDF real, el aviso HTML de informe en actualización,
 errores HTTP temporales y HTML inesperado. Valida el dominio, `Content-Type`, firma `%PDF-`,
@@ -41,14 +42,15 @@ python -m leixa_monitor.cli --data-dir otra-carpeta --attempts 5 --retry-wait 3 
 python -m leixa_monitor.cli -v check
 ```
 
-`--dry-run` descarga y analiza, pero no envía ni modifica archivos. `--force-notify` envía el
-estado actual aunque no haya cambios semánticos. La primera ejecución guarda una línea base sin
-alerta; para avisar también entonces, define `NOTIFY_ON_FIRST_RUN=true`.
+`--dry-run` descarga y analiza, pero no envía ni modifica archivos. Cada ejecución correcta
+envía el estado actual aunque no haya cambios semánticos; `--force-notify` se conserva por
+compatibilidad.
 
 El estado válido queda en `data/state.json` y el contador de salud en `data/health.json`. La
 salida manual muestra una tabla con código, módulo, ofertadas, ocupadas y vacantes. Código de
 salida `0` significa éxito, `2` que el informe sigue actualizándose tras los reintentos y `1` un
-error real. Si el SHA-256 coincide con el anterior, no vuelve a extraer ni notificar.
+error real. Si el SHA-256 coincide con el anterior, no vuelve a extraer el PDF, pero sí envía
+el resumen usando el último estado válido.
 
 Los dos primeros fallos consecutivos solo generan logs. Al tercero se envía una única alerta;
 tras recuperarse se envía otra y el contador vuelve a cero. Un fallo nunca borra el estado

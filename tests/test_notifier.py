@@ -9,6 +9,7 @@ from leixa_monitor.notifier import (
     NotificationError,
     build_change_message,
     build_report_updating_message,
+    build_status_message,
     send_telegram,
 )
 
@@ -29,6 +30,41 @@ def test_report_updating_message_explains_retry_and_preserved_state() -> None:
     assert "todavía se está actualizando" in message
     assert "Se intentó comprobar las plazas" in message
     assert "último estado válido se conserva" in message
+
+
+def test_status_message_lists_unchanged_modules(sample_state) -> None:
+    message = build_status_message(sample_state, ())
+    assert "Sin cambios respecto" in message
+    assert "MP0100 · Oficina de farmacia" in message
+    assert "<b>MP0100" not in message
+
+
+def test_status_message_highlights_changed_new_and_removed_modules(sample_state) -> None:
+    current = replace(
+        sample_state,
+        modules=(
+            ModuleAvailability("MP0100", "Oficina & farmacia", 40, 36, 4),
+            ModuleAvailability("MP0101", "Nueva", 20, 10, 10),
+        ),
+    )
+    previous = replace(
+        sample_state,
+        modules=(
+            *sample_state.modules,
+            ModuleAvailability("MP0999", "Antigua", 10, 10, 0),
+        ),
+    )
+    changes = compare_states(previous, current)
+
+    message = build_status_message(current, changes)
+
+    assert "<b>MP0100 · Oficina &amp; farmacia" in message
+    assert "<b>Cambios:" in message
+    assert "Vacantes: 3 → 4 (+1)" in message
+    assert "<b>MP0101 · Nueva" in message
+    assert "NUEVA</b>" in message
+    assert "<s>MP0999 · Antigua" in message
+    assert "ELIMINADA</s>" in message
 
 
 @responses.activate

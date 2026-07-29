@@ -11,11 +11,11 @@ from .comparator import compare_states
 from .config import SOURCE_URL, Settings
 from .downloader import DownloadError, ReportUpdating, download_pdf
 from .extractor import CenterNotFound, CycleNotFound, ExtractionError, extract_report
-from .models import Change, ChangeType, MonitorState
+from .models import Change, MonitorState
 from .notifier import (
     NotificationError,
-    build_change_message,
     build_report_updating_message,
+    build_status_message,
     send_telegram,
 )
 from .state import (
@@ -137,6 +137,7 @@ def _check(settings: Settings, *, dry_run: bool, force_notify: bool) -> int:
         )
         if old is not None and old.pdf_sha256 == downloaded.sha256:
             logger.info("PDF sin cambios; se omite la extracción")
+            _notify(settings, build_status_message(old, ()), dry_run)
             _record_success(settings, dry_run)
             _print_table(old)
             return EXIT_OK
@@ -150,24 +151,9 @@ def _check(settings: Settings, *, dry_run: bool, force_notify: bool) -> int:
             cycle=report.cycle,
             modules=report.modules,
         )
-        changes: tuple[Change, ...]
-        if old is None:
-            initial_changes = (
-                Change(ChangeType.MODULE_ADDED, module.code, None, module)
-                for module in current.modules
-            )
-            changes = tuple(initial_changes) if settings.notify_on_first_run else ()
-        else:
-            changes = compare_states(old, current)
+        changes: tuple[Change, ...] = () if old is None else compare_states(old, current)
         _print_table(current)
-        if changes or force_notify:
-            if force_notify and not changes:
-                forced_changes = (
-                    Change(ChangeType.MODULE_ADDED, module.code, None, module)
-                    for module in current.modules
-                )
-                changes = tuple(forced_changes)
-            _notify(settings, build_change_message(current, changes), dry_run)
+        _notify(settings, build_status_message(current, changes), dry_run)
         if not dry_run:
             save_state(state_path, current)
         _record_success(settings, dry_run)
