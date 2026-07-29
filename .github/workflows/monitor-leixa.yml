@@ -2,7 +2,7 @@ name: Monitor CIFP Leixa
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "3,13,23,33,43,53 * * * *"
   workflow_dispatch:
     inputs:
       send_test_notification:
@@ -87,4 +87,3 @@ jobs:
             fi
             sleep $((attempt * 3))
           done
-
