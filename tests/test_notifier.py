@@ -35,8 +35,9 @@ def test_report_updating_message_explains_retry_and_preserved_state() -> None:
 def test_status_message_lists_unchanged_modules(sample_state) -> None:
     message = build_status_message(sample_state, ())
     assert "Sin cambios respecto" in message
-    assert "MP0100 · Oficina de farmacia" in message
-    assert "<b>MP0100" not in message
+    assert (
+        "<b>[MP0100 - Oficina de farmacia]</b> Ofertadas: 40, Ocupadas: 37, Vacantes: 3"
+    ) in message
 
 
 def test_status_message_highlights_changed_new_and_removed_modules(sample_state) -> None:
@@ -58,13 +59,25 @@ def test_status_message_highlights_changed_new_and_removed_modules(sample_state)
 
     message = build_status_message(current, changes)
 
-    assert "<b>MP0100 · Oficina &amp; farmacia" in message
+    assert "<b>[MP0100 - Oficina &amp; farmacia]</b>" in message
     assert "<b>Cambios:" in message
     assert "Vacantes: 3 → 4 (+1)" in message
-    assert "<b>MP0101 · Nueva" in message
-    assert "NUEVA</b>" in message
-    assert "<s>MP0999 · Antigua" in message
+    assert "<b>[MP0101 - Nueva]</b>" in message
+    assert "<b>— NUEVA</b>" in message
+    assert "<s><b>[MP0999 - Antigua]</b>" in message
     assert "ELIMINADA</s>" in message
+    assert "\n\n• <b>[MP0101" in message
+
+
+def test_status_message_strikes_modules_without_vacancies(sample_state) -> None:
+    full = replace(
+        sample_state,
+        modules=(ModuleAvailability("MP0100", "Oficina", 40, 40, 0),),
+    )
+
+    message = build_status_message(full, compare_states(sample_state, full))
+
+    assert ("<s><b>[MP0100 - Oficina]</b> Ofertadas: 40, Ocupadas: 40, Vacantes: 0</s>") in message
 
 
 @responses.activate

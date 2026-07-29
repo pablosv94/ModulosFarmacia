@@ -31,11 +31,13 @@ def build_report_updating_message() -> str:
     )
 
 
-def _module_summary(module: ModuleAvailability) -> str:
-    return (
-        f"{html.escape(module.code)} · {html.escape(module.name)} — "
-        f"{module.offered} ofertadas, {module.occupied} ocupadas, {module.vacant} vacantes"
+def _module_line(module: ModuleAvailability, *, suffix: str = "", struck: bool = False) -> str:
+    summary = (
+        f"<b>[{html.escape(module.code)} - {html.escape(module.name)}]</b> "
+        f"Ofertadas: {module.offered}, Ocupadas: {module.occupied}, "
+        f"Vacantes: {module.vacant}{suffix}"
     )
+    return f"• <s>{summary}</s>" if struck else f"• {summary}"
 
 
 def build_status_message(state: MonitorState, changes: Iterable[Change]) -> str:
@@ -61,10 +63,16 @@ def build_status_message(state: MonitorState, changes: Iterable[Change]) -> str:
     ]
     for module in state.modules:
         module_changes = changes_by_module.get(module.code, [])
-        summary = _module_summary(module)
         added = any(change.kind == ChangeType.MODULE_ADDED for change in module_changes)
         if added:
-            lines.append(f"• <b>{summary} — NUEVA</b>")
+            lines.append(
+                _module_line(
+                    module,
+                    suffix=" <b>— NUEVA</b>",
+                    struck=module.vacant == 0,
+                )
+            )
+            lines.append("")
             continue
         relevant = [
             change
@@ -78,9 +86,10 @@ def build_status_message(state: MonitorState, changes: Iterable[Change]) -> str:
             }
         ]
         if not relevant:
-            lines.append(f"• {summary}")
+            lines.append(_module_line(module, struck=module.vacant == 0))
+            lines.append("")
             continue
-        lines.append(f"• <b>{summary}</b>")
+        lines.append(_module_line(module, struck=module.vacant == 0))
         details: list[str] = []
         for change in relevant:
             label = LABELS[change.kind]
@@ -92,13 +101,16 @@ def build_status_message(state: MonitorState, changes: Iterable[Change]) -> str:
                 f"{label}: {html.escape(str(change.old))} → {html.escape(str(change.new))}{suffix}"
             )
         lines.append(f"  <b>Cambios: {'; '.join(details)}</b>")
+        lines.append("")
     for module in removed:
-        lines.append(f"• <s>{_module_summary(module)} — ELIMINADA</s>")
+        lines.append(_module_line(module, suffix=" — ELIMINADA", struck=True))
+        lines.append("")
 
     checked = datetime.fromisoformat(state.checked_at)
+    if lines[-1]:
+        lines.append("")
     lines.extend(
         [
-            "",
             f"Comprobado: {checked.astimezone().strftime('%d/%m/%Y %H:%M')}",
             f'<a href="{html.escape(state.source_url, quote=True)}">Abrir informe oficial</a>',
         ]

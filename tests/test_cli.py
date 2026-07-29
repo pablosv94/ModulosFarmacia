@@ -81,4 +81,4 @@ def test_unchanged_pdf_sends_current_modules(tmp_path, sample_state, monkeypatch
 
     assert len(messages) == 1
     assert "Sin cambios respecto" in messages[0]
-    assert "MP0100 · Oficina de farmacia" in messages[0]
+    assert "<b>[MP0100 - Oficina de farmacia]</b>" in messages[0]

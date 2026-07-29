@@ -5,7 +5,7 @@ liberados de FP de la Xunta de Galicia. Solo extrae el centro `15021469 - CIFP L
 `ZD2SAN000 - Farmacia e parafarmacia`, curso 2026-2027, grado medio y modalidad a distancia.
 Compara cada PDF válido con el último estado y envía por Telegram un resumen de cada
 comprobación correcta. El mensaje lista todos los módulos, resalta en negrita los nuevos o
-modificados y muestra tachados los que desaparecieron del informe.
+modificados y muestra tachados los que desaparecieron del informe o tienen cero vacantes.
 
 El descargador identifica por separado un PDF real, el aviso HTML de informe en actualización,
 errores HTTP temporales y HTML inesperado. Valida el dominio, `Content-Type`, firma `%PDF-`,
