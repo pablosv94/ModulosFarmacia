@@ -1,5 +1,5 @@
 {
-  "consecutive_failures": 2,
+  "consecutive_failures": 0,
   "alerted": false,
-  "last_category": "Informe todavía actualizándose"
+  "last_category": null
 }
