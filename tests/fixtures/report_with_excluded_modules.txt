@@ -1,0 +1,7 @@
+15021469 - CIFP Leixa
+ZD2SAN000 - Farmacia e parafarmacia
+MP0100 Oficina de farmacia 40 37 3
+MP1708 Módulo xa asignado 10 9 1
+MO0003 Outro módulo xa asignado 20 15 5
+MP1664 Módulo sen vacantes 10 10 0
+MP1710 Módulo asignado con prazas 12 8 4

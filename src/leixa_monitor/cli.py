@@ -12,6 +12,7 @@ from .config import SOURCE_URL, Settings
 from .downloader import DownloadError, ReportUpdating, download_pdf
 from .extractor import CenterNotFound, CycleNotFound, ExtractionError, extract_report
 from .models import Change, MonitorState
+from .module_filter import filter_excluded_modules
 from .notifier import (
     NotificationError,
     build_report_updating_message,
@@ -128,6 +129,8 @@ def _check(settings: Settings, *, dry_run: bool, force_notify: bool) -> int:
     state_path = settings.data_dir / "state.json"
     try:
         old = load_state(state_path)
+        if old is not None:
+            old = filter_excluded_modules(old)
         downloaded = download_pdf(
             SOURCE_URL,
             attempts=settings.attempts,
@@ -203,7 +206,7 @@ def main(argv: list[str] | None = None) -> int:
     if state is None:
         logger.error("todavía no existe un estado válido")
         return EXIT_ERROR
-    _print_table(state)
+    _print_table(filter_excluded_modules(state))
     return EXIT_OK
 
 

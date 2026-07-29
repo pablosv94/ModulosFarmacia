@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import pdfplumber
 
 from .models import Entity, ModuleAvailability
+from .module_filter import is_excluded_module
 
 CENTER_RE = re.compile(r"^\s*(\d{8})\s*[-–·]\s*(.+?)\s*$")
 CYCLE_RE = re.compile(r"^\s*([A-Z0-9]{8,12})\s*[-–·]\s*(.+?)\s*$")
@@ -67,6 +68,8 @@ def parse_report_text(
     pending_name: list[str] = []
 
     def add(module: ModuleAvailability) -> None:
+        if is_excluded_module(module.code):
+            return
         if module.offered != module.occupied + module.vacant:
             raise ExtractionError(f"totales incompatibles en {module.code}")
         old = modules.get(module.code)

@@ -43,3 +43,11 @@ def test_conflicting_duplicate() -> None:
     )
     with pytest.raises(ExtractionError, match="incompatibles"):
         parse_report_text(text)
+
+
+def test_excludes_modules_that_are_already_assigned() -> None:
+    report = parse_report_text(
+        (FIXTURES / "report_with_excluded_modules.txt").read_text(encoding="utf-8")
+    )
+
+    assert [item.code for item in report.modules] == ["MP0100"]

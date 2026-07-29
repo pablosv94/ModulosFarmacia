@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 from leixa_monitor import cli
 from leixa_monitor.config import Settings
 from leixa_monitor.downloader import DownloadedPdf, ReportUpdating
+from leixa_monitor.models import ModuleAvailability
 from leixa_monitor.state import load_state, save_state
 
 
@@ -82,3 +85,33 @@ def test_unchanged_pdf_sends_current_modules(tmp_path, sample_state, monkeypatch
     assert len(messages) == 1
     assert "Sin cambios respecto" in messages[0]
     assert "<b>[MP0100 - Oficina de farmacia]</b>" in messages[0]
+
+
+def test_unchanged_pdf_omits_excluded_modules_from_existing_state(
+    tmp_path, sample_state, monkeypatch
+) -> None:
+    state_with_excluded_module = replace(
+        sample_state,
+        modules=(
+            *sample_state.modules,
+            ModuleAvailability("MP1708", "Módulo xa asignado", 10, 9, 1),
+        ),
+    )
+    save_state(tmp_path / "state.json", state_with_excluded_module)
+    messages: list[str] = []
+    monkeypatch.setattr(
+        cli,
+        "download_pdf",
+        lambda *args, **kwargs: DownloadedPdf(b"%PDF-same", sample_state.pdf_sha256),
+    )
+    monkeypatch.setattr(
+        cli,
+        "send_telegram",
+        lambda token, chat_id, text: messages.append(text),
+    )
+    settings = Settings(data_dir=tmp_path, bot_token="test-token", chat_id="test-chat")
+
+    assert cli._check(settings, dry_run=False, force_notify=False) == cli.EXIT_OK
+
+    assert "MP0100" in messages[0]
+    assert "MP1708" not in messages[0]
