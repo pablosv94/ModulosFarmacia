@@ -22,6 +22,15 @@ LABELS = {
 }
 
 
+def build_report_updating_message() -> str:
+    return (
+        "⏳ <b>El informe del CIFP Leixa todavía se está actualizando</b>\n\n"
+        "Se intentó comprobar las plazas, pero el PDF aún no está disponible. "
+        "Se volverá a intentar en la próxima comprobación.\n\n"
+        "El último estado válido se conserva."
+    )
+
+
 def build_change_message(state: MonitorState, changes: Iterable[Change]) -> str:
     grouped: dict[str | None, list[Change]] = defaultdict(list)
     for change in changes:

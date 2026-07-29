@@ -12,7 +12,12 @@ from .config import SOURCE_URL, Settings
 from .downloader import DownloadError, ReportUpdating, download_pdf
 from .extractor import CenterNotFound, CycleNotFound, ExtractionError, extract_report
 from .models import Change, ChangeType, MonitorState
-from .notifier import NotificationError, build_change_message, send_telegram
+from .notifier import (
+    NotificationError,
+    build_change_message,
+    build_report_updating_message,
+    send_telegram,
+)
 from .state import (
     HealthState,
     StateError,
@@ -82,7 +87,11 @@ def _record_failure(settings: Settings, exc: BaseException, dry_run: bool) -> No
         previous = HealthState()
     category = _error_category(exc)
     current = HealthState(previous.consecutive_failures + 1, previous.alerted, category)
-    if current.consecutive_failures >= 3 and not current.alerted:
+    if (
+        current.consecutive_failures >= 3
+        and not current.alerted
+        and not isinstance(exc, ReportUpdating)
+    ):
         text = (
             "⚠️ <b>Problema persistente en el monitor del CIFP Leixa</b>\n\n"
             f"{category}\n"
@@ -167,6 +176,11 @@ def _check(settings: Settings, *, dry_run: bool, force_notify: bool) -> int:
     except (StateError, DownloadError, ExtractionError, NotificationError) as exc:
         logger.error("%s: %s", _error_category(exc), exc)
         if not isinstance(exc, StateError):
+            if isinstance(exc, ReportUpdating):
+                try:
+                    _notify(settings, build_report_updating_message(), dry_run)
+                except NotificationError:
+                    logger.exception("no se pudo avisar de que el informe se está actualizando")
             _record_failure(settings, exc, dry_run)
         return EXIT_TEMPORARY if isinstance(exc, ReportUpdating) else EXIT_ERROR
 

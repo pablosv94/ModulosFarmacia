@@ -5,7 +5,12 @@ import responses
 
 from leixa_monitor.comparator import compare_states
 from leixa_monitor.models import ModuleAvailability
-from leixa_monitor.notifier import NotificationError, build_change_message, send_telegram
+from leixa_monitor.notifier import (
+    NotificationError,
+    build_change_message,
+    build_report_updating_message,
+    send_telegram,
+)
 
 
 def test_message_groups_changes_and_delta(sample_state) -> None:
@@ -17,6 +22,13 @@ def test_message_groups_changes_and_delta(sample_state) -> None:
     assert "Ocupadas: 37 → 36" in message
     assert "Vacantes: 3 → 4 (+1)" in message
     assert "Oficina &amp; farmacia" in message
+
+
+def test_report_updating_message_explains_retry_and_preserved_state() -> None:
+    message = build_report_updating_message()
+    assert "todavía se está actualizando" in message
+    assert "Se intentó comprobar las plazas" in message
+    assert "último estado válido se conserva" in message
 
 
 @responses.activate
