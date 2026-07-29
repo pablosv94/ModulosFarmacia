@@ -209,6 +209,10 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# Artefactos locales del monitor (el estado JSON sí se versiona)
+data/*.pdf
+data/*.tmp
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

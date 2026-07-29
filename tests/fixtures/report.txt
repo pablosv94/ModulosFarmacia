@@ -1,0 +1,21 @@
+Curso: 2026-2027
+Grao: Medio
+Modalidade: Distancia
+15000001 - Outro centro
+ZD2SAN000 - Farmacia e parafarmacia
+MP0001 Outro módulo 10 5 5
+15021469 - CIFP Leixa
+ZD2SAN999 - Farmacia similar
+MP9999 Non pertence 20 10 10
+ZD2SAN000 - Farmacia e parafarmacia
+Código Módulo Ofertadas Ocupadas Vacantes
+MP0100 Oficina de farmacia 40 37 3
+MP0101 Dispensación de produtos
+farmacéuticos 30 28 2
+Código Módulo Ofertadas Ocupadas Vacantes
+MP0100 Oficina de farmacia 40 37 3
+MP0102 Formulación maxistral 20 20 0
+ZD2SAN111 - Outro ciclo
+MP0100 Non pertence 99 90 9
+15099999 - Centro posterior
+
