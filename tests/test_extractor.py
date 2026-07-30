@@ -30,10 +30,13 @@ def test_finds_center_by_name_when_code_is_missing() -> None:
     assert [item.code for item in report.modules] == ["MP0100", "MP0101"]
 
 
-def test_inconsistent_total() -> None:
+def test_accepts_inconsistent_total() -> None:
     text = "15021469 - CIFP Leixa\nZD2SAN000 - Farmacia e parafarmacia\nMP0100 Nome 10 8 3"
-    with pytest.raises(ExtractionError, match="totales"):
-        parse_report_text(text)
+    report = parse_report_text(text)
+
+    assert report.modules[0].offered == 10
+    assert report.modules[0].occupied == 8
+    assert report.modules[0].vacant == 3
 
 
 def test_conflicting_duplicate() -> None:

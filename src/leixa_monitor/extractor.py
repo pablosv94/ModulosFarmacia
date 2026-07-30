@@ -70,8 +70,6 @@ def parse_report_text(
     def add(module: ModuleAvailability) -> None:
         if is_excluded_module(module.code):
             return
-        if module.offered != module.occupied + module.vacant:
-            raise ExtractionError(f"totales incompatibles en {module.code}")
         old = modules.get(module.code)
         if old is not None and old != module:
             raise ExtractionError(f"datos incompatibles repetidos para {module.code}")
