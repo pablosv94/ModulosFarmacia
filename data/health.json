@@ -1,5 +1,5 @@
 {
-  "consecutive_failures": 2,
-  "alerted": false,
+  "consecutive_failures": 3,
+  "alerted": true,
   "last_category": "Error de red o formato inesperado"
 }
