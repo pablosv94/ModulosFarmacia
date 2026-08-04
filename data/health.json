@@ -1,5 +1,5 @@
 {
-  "consecutive_failures": 1,
+  "consecutive_failures": 0,
   "alerted": false,
-  "last_category": "Error interno"
+  "last_category": null
 }
