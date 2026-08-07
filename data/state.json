@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-08-07T20:31:16+02:00",
+  "checked_at": "2026-08-07T20:41:06+02:00",
   "source_url": "https://www.edu.xunta.gal/ciclosadmision/publico/HistorialAlumno.do?DIALOG-EVENT-listaxeModulosLiberados=listaxeModulosLiberados&ano=2026&grao=M&tipo=D",
-  "pdf_sha256": "7c4bd043d7751579990453ae9163d93d3e43ed68ca8c36307e4379a979b142a3",
+  "pdf_sha256": "7502dcb5bd83794937ea105fd6784b6aaa1f4815f7ca2b2796d11b50c1104a14",
   "center": {
     "code": "15021469",
     "name": "CIFP Leixa"
